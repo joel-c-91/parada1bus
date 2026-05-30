@@ -8,8 +8,6 @@ interface Servicio {
   nombre: string;
   descripcion_corta: string;
   descripcion_larga: string;
-  icono: string;
-  imagen: string | null;
 }
 
 export default function Servicios() {
@@ -25,7 +23,7 @@ export default function Servicios() {
   if (cargando) {
     return (
       <div className="flex items-center justify-center py-32">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-rojo" />
       </div>
     );
   }
@@ -53,7 +51,7 @@ export default function Servicios() {
         <div className="text-center mt-12">
           <Link
             to="/cotizar"
-            className="inline-flex items-center gap-2 bg-amber-500 text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-400 transition-all"
+            className="inline-flex items-center gap-2 bg-rojo text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all"
           >
             Cotizá tu viaje <ArrowRight className="w-4 h-4" />
           </Link>

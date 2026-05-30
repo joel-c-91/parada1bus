@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
-/* Mejoras mobile globales */
+@theme {
+  --color-francia: #003366;
+  --color-francia-claro: #004080;
+  --color-francia-oscuro: #002244;
+  --color-rojo: #DC2626;
+  --color-rojo-claro: #FEE2E2;
+  --color-rojo-oscuro: #B91C1C;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -12,7 +20,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Transición suave para el menú mobile */
 .mobile-menu-enter {
   max-height: 0;
   opacity: 0;

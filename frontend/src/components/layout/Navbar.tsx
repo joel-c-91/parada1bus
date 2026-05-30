@@ -1,4 +1,4 @@
-import { Bus, MapPin, Phone, Menu, X } from 'lucide-react';
+import { Bus, Phone, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-2 text-xl font-bold text-gray-900">
-            <Bus className="w-7 h-7 text-amber-500" />
+            <Bus className="w-7 h-7 text-rojo" />
             <span>Parada 1 Bus</span>
           </Link>
 
@@ -33,7 +33,7 @@ export default function Navbar() {
                   to={enlace.path}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     activo
-                      ? 'bg-amber-50 text-amber-700'
+                      ? 'bg-rojo-claro text-rojo'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
@@ -71,7 +71,7 @@ export default function Navbar() {
                   to={enlace.path}
                   onClick={() => setAbierto(false)}
                   className={`block px-4 py-2 rounded-lg text-sm font-medium ${
-                    activo ? 'bg-amber-50 text-amber-700' : 'text-gray-600 hover:bg-gray-50'
+                    activo ? 'bg-rojo-claro text-rojo' : 'text-gray-600 hover:bg-gray-50'
                   }`}
                 >
                   {enlace.label}
