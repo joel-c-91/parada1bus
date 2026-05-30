@@ -4,6 +4,8 @@ import Inicio from './pages/Inicio';
 import Servicios from './pages/Servicios';
 import Flota from './pages/Flota';
 import Cotizar from './pages/Cotizar';
+import BuscarViaje from './pages/BuscarViaje';
+import Reservar from './pages/Reservar';
 import Contacto from './pages/Contacto';
 
 export default function App() {
@@ -15,6 +17,8 @@ export default function App() {
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/flota" element={<Flota />} />
           <Route path="/cotizar" element={<Cotizar />} />
+          <Route path="/buscar-viaje" element={<BuscarViaje />} />
+          <Route path="/reservar/:salidaId" element={<Reservar />} />
           <Route path="/contacto" element={<Contacto />} />
         </Route>
       </Routes>

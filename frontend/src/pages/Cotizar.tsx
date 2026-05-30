@@ -58,7 +58,7 @@ export default function Cotizar() {
 
   if (exito) {
     return (
-      <div className="py-20 bg-white">
+      <div className="py-16 md:py-20 bg-white">
         <div className="max-w-lg mx-auto px-4 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-8 h-8 text-green-600" />
@@ -79,16 +79,16 @@ export default function Cotizar() {
   }
 
   return (
-    <div className="py-20 bg-gray-50">
+    <div className="py-16 md:py-20 bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8 md:mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Cotizá tu viaje</h1>
           <p className="text-gray-600">
             Completá el formulario y te enviaremos un presupuesto personalizado.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>

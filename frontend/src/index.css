@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+/* Mejoras mobile globales */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Transición suave para el menú mobile */
+.mobile-menu-enter {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.mobile-menu-open {
+  max-height: 400px;
+  opacity: 1;
+}

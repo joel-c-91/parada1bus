@@ -6,6 +6,7 @@ const enlaces = [
   { path: '/', label: 'Inicio' },
   { path: '/servicios', label: 'Servicios' },
   { path: '/flota', label: 'Flota' },
+  { path: '/buscar-viaje', label: 'Rutas Fijas' },
   { path: '/cotizar', label: 'Cotizar Viaje' },
   { path: '/contacto', label: 'Contacto' },
 ];
@@ -60,9 +61,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {abierto && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
-          <div className="px-4 py-3 space-y-1">
+      <div className={`md:hidden border-t border-gray-100 bg-white mobile-menu-enter ${abierto ? 'mobile-menu-open' : ''}`}>
+        <div className="px-4 py-3 space-y-1">
             {enlaces.map((enlace) => {
               const activo = location.pathname === enlace.path;
               return (
@@ -82,14 +82,13 @@ export default function Navbar() {
               href="https://wa.me/5493584000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              className="flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-3 rounded-lg text-sm font-medium min-h-[44px]"
             >
               <Phone className="w-4 h-4" />
               WhatsApp
             </a>
           </div>
         </div>
-      )}
     </nav>
   );
 }

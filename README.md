@@ -88,7 +88,9 @@ La API está disponible en `http://localhost:8000/api/`:
 | GET | `/api/vehiculos/` | Lista de la flota |
 | GET | `/api/servicios/` | Servicios disponibles |
 | GET/POST | `/api/solicitudes-charter/` | Solicitudes de viaje a medida |
-| GET | `/api/rutas/` | Rutas fijas (con horarios) |
+| GET | `/api/rutas/` | Rutas fijas con horarios y precios |
+| GET | `/api/rutas/buscar/?origen=X&destino=Y` | Buscar rutas entre dos ciudades |
+| GET | `/api/rutas/{id}/` | Detalle de ruta con salidas |
 | GET/POST | `/api/reservas/` | Reservas de pasajes |
 | POST | `/api/contacto/` | Enviar mensaje de contacto |
 

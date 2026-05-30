@@ -37,7 +37,7 @@ export default function Flota() {
   };
 
   return (
-    <div className="py-20 bg-white">
+    <div className="py-16 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Nuestra Flota</h1>
@@ -50,7 +50,7 @@ export default function Flota() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vehiculos.map((v) => (
             <div key={v.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gray-100 flex items-center justify-center">
+              <div className="h-40 md:h-48 bg-gray-100 flex items-center justify-center">
                 {v.imagen ? (
                   <img src={v.imagen} alt={v.nombre} className="w-full h-full object-cover" />
                 ) : (

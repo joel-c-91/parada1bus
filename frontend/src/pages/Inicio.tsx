@@ -53,26 +53,26 @@ export default function Inicio() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069')] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/50 to-gray-900" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-36">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-amber-500/10 text-amber-400 px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-amber-500/20">
-              <Calendar className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 bg-amber-500/10 text-amber-400 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 border border-amber-500/20">
+              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Viajes especiales en Río Cuarto y Córdoba
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-tight mb-4 sm:mb-6">
               Viajá con{' '}
               <span className="text-amber-400">confianza</span>
               , llegá con{' '}
               <span className="text-amber-400">comodidad</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl">
               Transporte privado para eventos, turismo, empresas y rutas fijas.
               Flota moderna, choferes profesionales y el mejor servicio de Río Cuarto.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Link
                 to="/cotizar"
-                className="inline-flex items-center gap-2 bg-amber-500 text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/25"
+                className="inline-flex items-center justify-center gap-2 bg-amber-500 text-gray-900 px-6 py-3.5 sm:py-3 rounded-xl font-semibold hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/25 min-h-[48px]"
               >
                 Cotizá tu viaje
                 <ArrowRight className="w-4 h-4" />
@@ -81,7 +81,7 @@ export default function Inicio() {
                 href="https://wa.me/5493584000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white/10 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition-all border border-white/10"
+                className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3.5 sm:py-3 rounded-xl font-semibold hover:bg-white/20 transition-all border border-white/10 min-h-[48px]"
               >
                 Consultanos por WhatsApp
               </a>
@@ -91,7 +91,7 @@ export default function Inicio() {
       </section>
 
       {/* Servicios */}
-      <section className="py-20 bg-white">
+      <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -121,7 +121,7 @@ export default function Inicio() {
       </section>
 
       {/* Flota */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -155,8 +155,47 @@ export default function Inicio() {
         </div>
       </section>
 
+      {/* Rutas Fijas */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Viajes en rutas fijas
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Conectamos Río Cuarto con las principales ciudades del país.
+                Consultá horarios, precios y asegurá tu lugar con reserva online.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {['Río Cuarto ↔ Córdoba', 'Río Cuarto ↔ Mendoza', 'Más destinos disponibles'].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-gray-700">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/buscar-viaje"
+                className="inline-flex items-center gap-2 bg-amber-500 text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-amber-400 transition-all min-h-[48px]"
+              >
+                Buscar viaje
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-8 md:p-12">
+              <div className="text-center">
+                <div className="text-5xl mb-4">🚍</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Salidas diarias</h3>
+                <p className="text-gray-600">Consultá horarios y reservá tu pasaje al instante.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-amber-500 to-amber-600">
+      <section className="py-16 md:py-20 bg-gradient-to-r from-amber-500 to-amber-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             ¿Listo para tu próximo viaje?
