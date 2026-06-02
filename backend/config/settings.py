@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Terceros
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
     # Apps propias
@@ -25,6 +26,10 @@ INSTALLED_APPS = [
     'rutas',
     'reservas',
     'contacto',
+    'usuarios',
+    'finanzas',
+    'promociones',
+    'configuracion',
 ]
 
 MIDDLEWARE = [
@@ -93,4 +98,19 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d/%m/%Y %H:%M',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }

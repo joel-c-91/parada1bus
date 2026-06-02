@@ -9,3 +9,10 @@ class VehiculoSerializer(serializers.ModelSerializer):
         model = Vehiculo
         fields = ['id', 'nombre', 'tipo', 'tipo_display', 'capacidad',
                   'descripcion', 'imagen', 'activo', 'orden']
+
+
+class AdminVehiculoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehiculo
+        fields = ['id', 'nombre', 'tipo', 'capacidad', 'patente',
+                  'descripcion', 'imagen', 'activo', 'orden']

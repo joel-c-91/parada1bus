@@ -1,0 +1,49 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Bus travel web platform. Backend: Django 5.2 + DRF 3.16 + SQLite (dev, PostgreSQL planned).
+  Frontend: React 19 + Vite 8 + TypeScript 6 + Tailwind v4 + React Router v7.
+  6 Django apps: flota, servicios, charter, rutas, reservas, contacto.
+  No auth beyond Django admin. No test runner. No CI/CD.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: "cd frontend && npm run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+
+testing:
+  strict_tdd: false
+  runner: none
+  reason: "No test runner found in backend (empty Django TestCase stubs) or frontend (no vitest/jest/playwright config). TDD cannot be enforced without a runner."
+  backend:
+    runner: "Django TestCase (stub only — no tests written)"
+    pytest: false
+    coverage: false
+    linter: none
+    type_checker: none
+    formatter: none
+  frontend:
+    runner: none
+    coverage: false
+    linter: "ESLint 10.x — `npm run lint`"
+    type_checker: "TypeScript 6.x — `tsc -b`"
+    formatter: none

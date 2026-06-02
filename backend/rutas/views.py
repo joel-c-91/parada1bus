@@ -1,9 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from datetime import datetime, date
 from .models import Ruta, Salida
-from .serializers import RutaSerializer
+from .serializers import RutaSerializer, AdminRutaSerializer, AdminSalidaSerializer
 
 
 class RutaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -54,3 +55,15 @@ class RutaViewSet(viewsets.ReadOnlyModelViewSet):
         rutas = rutas.distinct()
         serializer = self.get_serializer(rutas, many=True)
         return Response(serializer.data)
+
+
+class AdminRutaViewSet(viewsets.ModelViewSet):
+    queryset = Ruta.objects.all()
+    serializer_class = AdminRutaSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class AdminSalidaViewSet(viewsets.ModelViewSet):
+    queryset = Salida.objects.all()
+    serializer_class = AdminSalidaSerializer
+    permission_classes = [IsAuthenticated]

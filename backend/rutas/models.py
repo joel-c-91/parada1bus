@@ -10,6 +10,7 @@ class Ruta(models.Model):
     descripcion = models.TextField(blank=True)
     activo = models.BooleanField(default=True)
     orden = models.PositiveIntegerField(default=0)
+    imagen = models.ImageField(upload_to='rutas/', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Ruta'
@@ -40,6 +41,11 @@ class Salida(models.Model):
     precio_base = models.DecimalField(
         'Precio base', max_digits=10, decimal_places=2
     )
+    precio_promocional = models.DecimalField(
+        'Precio promocional', max_digits=10, decimal_places=2,
+        null=True, blank=True
+    )
+    promocion_activa = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
 
     class Meta:

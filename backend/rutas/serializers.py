@@ -20,3 +20,18 @@ class RutaSerializer(serializers.ModelSerializer):
         model = Ruta
         fields = ['id', 'nombre', 'origen', 'destino', 'duracion_estimada',
                   'descripcion', 'salidas', 'activo']
+
+
+class AdminRutaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ruta
+        fields = ['id', 'nombre', 'origen', 'destino', 'duracion_estimada',
+                  'descripcion', 'imagen', 'activo', 'orden']
+
+
+class AdminSalidaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salida
+        fields = ['id', 'ruta', 'dia_semana', 'hora_salida',
+                  'vehiculo', 'precio_base', 'precio_promocional',
+                  'promocion_activa', 'activo']
