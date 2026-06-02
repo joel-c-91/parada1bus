@@ -7,6 +7,28 @@
   --color-rojo: #DC2626;
   --color-rojo-claro: #FEE2E2;
   --color-rojo-oscuro: #B91C1C;
+  --animate-slide-up: slideUp 0.25s ease-out;
+  --animate-fade-in: fadeIn 0.15s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 html {

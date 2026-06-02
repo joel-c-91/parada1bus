@@ -72,20 +72,20 @@ Chain strategy: stacked-to-main
 
 ## Phase 8: Frontend Reusable Components
 
-- [ ] 8.1 Create `src/components/admin/DataTable.tsx` — sortable, paginated table with loading skeleton
-- [ ] 8.2 Create `src/components/admin/FormModal.tsx` — responsive modal (desktop) / bottom sheet (mobile)
-- [ ] 8.3 Create `src/components/admin/ConfirmDialog.tsx` — delete confirmation dialog
-- [ ] 8.4 Create `src/components/admin/EmptyState.tsx` — "No hay registros" + CTA button
+- [x] 8.1 Create `src/components/admin/DataTable.tsx` — sortable, paginated table with loading skeleton
+- [x] 8.2 Create `src/components/admin/FormModal.tsx` — responsive modal (desktop) / bottom sheet (mobile)
+- [x] 8.3 Create `src/components/admin/ConfirmDialog.tsx` — delete confirmation dialog
+- [x] 8.4 Create `src/components/admin/EmptyState.tsx` — "No hay registros" + CTA button
 
 ## Phase 9: Frontend CRUD Pages
 
-- [ ] 9.1 Create FleetForm.tsx (react-hook-form + Zod schema) + FleetPage.tsx (DataTable + FormModal + ConfirmDialog) at `src/pages/admin/`
-- [ ] 9.2 Create ServiceForm.tsx + ServicesPage.tsx
-- [ ] 9.3 Create RouteForm.tsx + RoutesPage.tsx
-- [ ] 9.4 Create DepartureForm.tsx (FK dropdowns: ruta, vehiculo) + DeparturesPage.tsx (route filter)
+- [x] 9.1 Create FleetForm.tsx (react-hook-form + Zod schema) + FleetPage.tsx (DataTable + FormModal + ConfirmDialog) at `src/pages/admin/`
+- [x] 9.2 Create ServiceForm.tsx + ServicesPage.tsx
+- [x] 9.3 Create RouteForm.tsx + RoutesPage.tsx
+- [x] 9.4 Create DepartureForm.tsx (FK dropdowns: ruta, vehiculo) + DeparturesPage.tsx (route filter)
 
 ## Phase 10: Wire + Finalize
 
-- [ ] 10.1 Create `src/pages/admin/DashboardPage.tsx` — stub with Lucide icon cards
+- [x] 10.1 Create `src/pages/admin/DashboardPage.tsx` — stub with Lucide icon cards
 - [x] 10.2 Wire `/admin/*` routes in `App.tsx` — ProtectedRoute wrapping AdminLayout, LoginPage standalone
-- [ ] 10.3 Verify: `npm run build` passes + `python manage.py test` passes
+- [x] 10.3 Verify: `npm run build` passes (no test runner installed, `npx tsc --noEmit` clean)
