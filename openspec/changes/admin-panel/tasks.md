@@ -54,21 +54,21 @@ Chain strategy: stacked-to-main
 
 ## Phase 5: Frontend Foundation
 
-- [ ] 5.1 Add `@tanstack/react-query`, `sonner`, `date-fns` deps to `package.json`
-- [ ] 5.2 Create `src/lib/queryClient.ts` — QueryClient + Toaster provider wrapper
-- [ ] 5.3 Create `src/lib/api.ts` — Axios instance with JWT interceptor (attach Bearer, auto-refresh on 401)
+- [x] 5.1 Add `@tanstack/react-query`, `sonner`, `date-fns` deps to `package.json`
+- [x] 5.2 Create `src/lib/queryClient.tsx` — QueryClient + Toaster provider wrapper
+- [x] 5.3 Create `src/lib/api.ts` — Axios instance with JWT interceptor (attach Bearer, auto-refresh on 401)
 
 ## Phase 6: Frontend Auth
 
-- [ ] 6.1 Create `src/contexts/AuthContext.tsx` — login/logout/isLoading/isAuthenticated + localStorage token mgmt
-- [ ] 6.2 Create `src/components/admin/ProtectedRoute.tsx` — redirect to /admin/login when unauthenticated
-- [ ] 6.3 Create `src/pages/admin/LoginPage.tsx` — email+password form, error display, calls AuthContext.login
+- [x] 6.1 Create `src/contexts/AuthContext.tsx` — login/logout/isLoading/isAuthenticated + localStorage token mgmt
+- [x] 6.2 Create `src/components/admin/ProtectedRoute.tsx` — redirect to /admin/login when unauthenticated
+- [x] 6.3 Create `src/pages/admin/LoginPage.tsx` — email+password form, error display, calls AuthContext.login
 
 ## Phase 7: Frontend Layout
 
-- [ ] 7.1 Create `src/components/admin/Sidebar.tsx` — collapsible desktop sidebar (240px/64px) with nav links + logout
-- [ ] 7.2 Create `src/components/admin/BottomNav.tsx` — mobile bottom nav bar (5 tabs + drawer, >44px targets)
-- [ ] 7.3 Create `src/components/admin/AdminLayout.tsx` — sidebar + bottom nav + Outlet shell
+- [x] 7.1 Create `src/components/admin/Sidebar.tsx` — collapsible desktop sidebar (240px/64px) with nav links + logout
+- [x] 7.2 Create `src/components/admin/BottomNav.tsx` — mobile bottom nav bar (5 tabs + drawer, >44px targets)
+- [x] 7.3 Create `src/components/admin/AdminLayout.tsx` — sidebar + bottom nav + Outlet shell
 
 ## Phase 8: Frontend Reusable Components
 
@@ -87,5 +87,5 @@ Chain strategy: stacked-to-main
 ## Phase 10: Wire + Finalize
 
 - [ ] 10.1 Create `src/pages/admin/DashboardPage.tsx` — stub with Lucide icon cards
-- [ ] 10.2 Wire `/admin/*` routes in `App.tsx` — ProtectedRoute wrapping AdminLayout, LoginPage standalone
+- [x] 10.2 Wire `/admin/*` routes in `App.tsx` — ProtectedRoute wrapping AdminLayout, LoginPage standalone
 - [ ] 10.3 Verify: `npm run build` passes + `python manage.py test` passes
