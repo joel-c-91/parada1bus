@@ -4,6 +4,7 @@ dist/
 *.pyc
 __pycache__/
 .venv/
+backend/venv/
 db.sqlite3
 media/
 .DS_Store
