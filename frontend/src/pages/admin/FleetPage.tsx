@@ -17,6 +17,7 @@ interface Vehiculo {
   capacidad: number;
   patente: string;
   descripcion: string;
+  imagen: string | null;
   activo: boolean;
   orden: number;
 }
@@ -43,7 +44,7 @@ export default function FleetPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (formData: FleetFormData) => {
+    mutationFn: async (formData: FleetFormData | FormData) => {
       await api.post('/admin/vehiculos/', formData);
     },
     onSuccess: () => {
@@ -59,7 +60,7 @@ export default function FleetPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data: formData }: { id: number; data: FleetFormData }) => {
+    mutationFn: async ({ id, data: formData }: { id: number; data: FleetFormData | FormData }) => {
       await api.patch(`/admin/vehiculos/${id}/`, formData);
     },
     onSuccess: () => {
@@ -121,7 +122,7 @@ export default function FleetPage() {
     setDeleteTarget(item);
   };
 
-  const handleSave = (formData: FleetFormData) => {
+  const handleSave = (formData: FleetFormData | FormData) => {
     if (editingItem) {
       updateMutation.mutate({ id: editingItem.id, data: formData });
     } else {
@@ -212,6 +213,7 @@ export default function FleetPage() {
                 }
               : undefined
           }
+          imagenUrl={editingItem?.imagen}
           onSave={handleSave}
           onCancel={handleCloseModal}
           loading={createMutation.isPending || updateMutation.isPending}

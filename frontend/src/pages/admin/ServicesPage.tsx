@@ -16,6 +16,7 @@ interface Servicio {
   descripcion_corta: string;
   descripcion_larga: string;
   icono: string;
+  imagen: string | null;
   activo: boolean;
   orden: number;
 }
@@ -42,7 +43,7 @@ export default function ServicesPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (formData: ServiceFormData) => {
+    mutationFn: async (formData: ServiceFormData | FormData) => {
       await api.post('/admin/servicios/', formData);
     },
     onSuccess: () => {
@@ -58,7 +59,7 @@ export default function ServicesPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data: formData }: { id: number; data: ServiceFormData }) => {
+    mutationFn: async ({ id, data: formData }: { id: number; data: ServiceFormData | FormData }) => {
       await api.patch(`/admin/servicios/${id}/`, formData);
     },
     onSuccess: () => {
@@ -107,7 +108,7 @@ export default function ServicesPage() {
     }
   };
 
-  const handleSave = (formData: ServiceFormData) => {
+  const handleSave = (formData: ServiceFormData | FormData) => {
     if (editingItem) {
       updateMutation.mutate({ id: editingItem.id, data: formData });
     } else {
@@ -199,6 +200,7 @@ export default function ServicesPage() {
                 }
               : undefined
           }
+          imagenUrl={editingItem?.imagen}
           onSave={handleSave}
           onCancel={handleCloseModal}
           loading={createMutation.isPending || updateMutation.isPending}

@@ -17,6 +17,7 @@ interface Ruta {
   destino: string;
   duracion_estimada: string;
   descripcion: string;
+  imagen: string | null;
   activo: boolean;
   orden: number;
 }
@@ -43,7 +44,7 @@ export default function RoutesPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (formData: RouteFormData) => {
+    mutationFn: async (formData: RouteFormData | FormData) => {
       await api.post('/admin/rutas/', formData);
     },
     onSuccess: () => {
@@ -57,7 +58,7 @@ export default function RoutesPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data: formData }: { id: number; data: RouteFormData }) => {
+    mutationFn: async ({ id, data: formData }: { id: number; data: RouteFormData | FormData }) => {
       await api.patch(`/admin/rutas/${id}/`, formData);
     },
     onSuccess: () => {
@@ -106,7 +107,7 @@ export default function RoutesPage() {
     }
   };
 
-  const handleSave = (formData: RouteFormData) => {
+  const handleSave = (formData: RouteFormData | FormData) => {
     if (editingItem) {
       updateMutation.mutate({ id: editingItem.id, data: formData });
     } else {
@@ -192,6 +193,7 @@ export default function RoutesPage() {
                 }
               : undefined
           }
+          imagenUrl={editingItem?.imagen}
           onSave={handleSave}
           onCancel={handleCloseModal}
           loading={createMutation.isPending || updateMutation.isPending}

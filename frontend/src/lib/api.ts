@@ -5,8 +5,13 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Request interceptor: attach Bearer token ──────────────────────────
+// ── Request interceptor: attach Bearer token + handle FormData ────────
 api.interceptors.request.use((config) => {
+  // Remove Content-Type for FormData so the browser sets it with boundary
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+
   const token = localStorage.getItem('parada1bus_access_token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;

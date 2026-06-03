@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Resolver } from 'react-hook-form';
 import { z } from 'zod';
-import { Upload } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 
 const serviceSchema = z.object({
   nombre: z.string().min(1, 'El nombre es requerido'),
@@ -23,21 +23,25 @@ export interface ServiceFormData {
   icono: string;
   activo: boolean;
   orden: number;
+  imagen?: File | null;
 }
 
 interface ServiceFormProps {
   defaultValues?: Partial<ServiceFormSchema>;
-  onSave: (data: ServiceFormData) => void;
+  imagenUrl?: string | null;
+  onSave: (data: ServiceFormData | FormData) => void;
   onCancel: () => void;
   loading?: boolean;
 }
 
 export default function ServiceForm({
   defaultValues,
+  imagenUrl,
   onSave,
   onCancel,
   loading,
 }: ServiceFormProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
@@ -60,6 +64,7 @@ export default function ServiceForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         setImagePreview(event.target?.result as string);
@@ -68,8 +73,31 @@ export default function ServiceForm({
     }
   };
 
+  const handleClearImage = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+  };
+
+  const onSubmit = (data: ServiceFormData) => {
+    if (selectedFile) {
+      const fd = new FormData();
+      fd.append('nombre', data.nombre);
+      fd.append('descripcion_corta', data.descripcion_corta);
+      fd.append('descripcion_larga', data.descripcion_larga ?? '');
+      fd.append('icono', data.icono ?? '');
+      fd.append('activo', String(data.activo));
+      fd.append('orden', String(data.orden ?? 0));
+      fd.append('imagen', selectedFile);
+      onSave(fd);
+    } else {
+      onSave(data);
+    }
+  };
+
+  const displayPreview = imagePreview ?? imagenUrl ?? null;
+
   return (
-    <form onSubmit={handleSubmit(onSave)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* nombre */}
       <div>
         <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
@@ -138,7 +166,7 @@ export default function ServiceForm({
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 cursor-pointer min-h-[44px] transition-colors">
             <Upload className="w-4 h-4" />
-            {imagePreview ? 'Cambiar imagen' : 'Subir imagen'}
+            {selectedFile ? 'Cambiar imagen' : displayPreview ? 'Cambiar imagen' : 'Subir imagen'}
             <input
               type="file"
               accept="image/*"
@@ -146,16 +174,26 @@ export default function ServiceForm({
               onChange={handleImageChange}
             />
           </label>
-          {imagePreview && (
-            <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0">
+          {displayPreview && (
+            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0">
               <img
-                src={imagePreview}
+                src={displayPreview}
                 alt="Vista previa"
                 className="w-full h-full object-cover"
               />
+              <button
+                type="button"
+                onClick={handleClearImage}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+              >
+                <X className="w-3 h-3" />
+              </button>
             </div>
           )}
         </div>
+        {imagenUrl && !selectedFile && (
+          <p className="text-xs text-gray-400 mt-1">Imagen actual del servidor</p>
+        )}
       </div>
 
       {/* activo */}

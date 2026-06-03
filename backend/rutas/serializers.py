@@ -19,7 +19,7 @@ class RutaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ruta
         fields = ['id', 'nombre', 'origen', 'destino', 'duracion_estimada',
-                  'descripcion', 'salidas', 'activo']
+                  'descripcion', 'imagen', 'salidas', 'activo']
 
 
 class AdminRutaSerializer(serializers.ModelSerializer):
