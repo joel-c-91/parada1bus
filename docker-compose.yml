@@ -1,3 +1,14 @@
+# Parada 1 Bus - entorno de desarrollo
+#
+# Levanta los 3 servicios (PostgreSQL + Django + Vite) con un solo comando.
+#
+# OJO: en esta maquina el plugin v2 no esta instalado. Usar el binario con
+# guion: `docker-compose up -d`, NO `docker compose up -d`.
+#
+# Las contrasenas tienen valores por defecto SOLO para desarrollo. Para
+# cualquier despliegue real, definirlas en un archivo .env (ver .env.example)
+# y cambiar tambien DJANGO_SECRET_KEY.
+
 services:
   db:
     image: postgres:16-alpine
@@ -6,11 +17,67 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: parada1bus
-      POSTGRES_USER: parada1bus
-      POSTGRES_PASSWORD: parada1bus_secret
+      POSTGRES_DB: ${POSTGRES_DB:-parada1bus}
+      POSTGRES_USER: ${POSTGRES_USER:-parada1bus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-parada1bus_dev_only}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Sin este healthcheck el backend arranca contra una base que todavia no
+      # esta lista y falla. depends_on solo espera el inicio, no la disponibilidad.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-parada1bus} -d ${POSTGRES_DB:-parada1bus}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  backend:
+    build: ./backend
+    container_name: parada1bus-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    # Espera a que PostgreSQL este listo, aplica migraciones y recien ahi levanta.
+    command: >
+      sh -c "until pg_isready -h db -p 5432 -U ${POSTGRES_USER:-parada1bus}; do
+             echo 'Esperando PostgreSQL...'; sleep 2;
+           done &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DB_ENGINE: postgresql
+      DB_NAME: ${POSTGRES_DB:-parada1bus}
+      DB_USER: ${POSTGRES_USER:-parada1bus}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-parada1bus_dev_only}
+      # Dentro de la red de compose el host de la base es el nombre del service.
+      DB_HOST: db
+      DB_PORT: "5432"
+      DJANGO_DEBUG: "True"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-django-insecure-dev-only-cambiar-en-produccion}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: parada1bus-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      # El proxy de Vite no puede apuntar a localhost: dentro del container,
+      # localhost es el propio container de Vite, no el backend.
+      VITE_PROXY_TARGET: http://backend:8000
+    volumes:
+      - ./frontend:/app
+      # OBLIGATORIO: volumen anonimo para node_modules. Sin esto, el
+      # node_modules del host (compilado para tu plataforma) pisa el del
+      # container y rompe los binarios nativos de Vite.
+      - /app/node_modules
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
