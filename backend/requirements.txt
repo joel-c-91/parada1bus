@@ -5,3 +5,8 @@ django-filter==25.1
 Pillow==11.1.0
 djangorestframework-simplejwt==5.5.0
 python-decouple==3.8
+
+# Driver de PostgreSQL. Sin esto la config de Postgres en settings.py no puede
+# funcionar aunque las variables de entorno estén definidas: Django falla con
+# "Error loading psycopg2 or psycopg module". Docker Compose lo necesita.
+psycopg[binary]==3.2.3
