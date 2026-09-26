@@ -3,9 +3,20 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-+v!o!wj65ln$5qw#r499ob3842+w5$tw*@07dfyeazm(l5#1@%'
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+# ── Configuración por entorno ───────────────────────────────────────────────
+# Estas variables se leen del entorno (ver .env.example). Los valores por
+# defecto son SOLO para desarrollo local: en producción DJANGO_SECRET_KEY es
+# obligatoria y la base de datos tiene que ser PostgreSQL.
+#
+# NOTA DE SEGURIDAD: la clave que estaba hardcodeada antes de este cambio
+# (&'django-insecure-...') quedó expuesta en el historial de git. Hay que
+# generar una nueva para cualquier despliegue real:
+#   python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-dev-only-cambiar-en-produccion'
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,24 +73,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# ── Base de datos ───────────────────────────────────────────────────────────
+# Sin variables DB_* definidas usa SQLite (así el backend sigue levanta con un
+# `python manage.py runserver` sin Docker). Con DB_ENGINE=postgresql usa
+# PostgreSQL, que es lo que usa Docker Compose y lo que debe usarse en
+# producción.
+#
+# Antes esta config estaba comentada con la contraseña escrita adentro del
+# archivo, lo que la dejaba expuesta en el repositorio. Ahora sale del entorno.
+if os.environ.get('DB_ENGINE') == 'postgresql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'parada1bus'),
+            'USER': os.environ.get('DB_USER', 'parada1bus'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'db'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
     }
-}
-
-# Para cambiar a PostgreSQL después:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'parada1bus',
-#         'USER': 'parada1bus',
-#         'PASSWORD': 'parada1bus_secret',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = []
 
