@@ -1,5 +1,6 @@
 from django.db import models
 from rutas.models import Salida
+from usuarios.models import Cliente
 
 
 class Reserva(models.Model):
@@ -14,6 +15,11 @@ class Reserva(models.Model):
         Salida, on_delete=models.CASCADE, related_name='reservas'
     )
     fecha_viaje = models.DateField('Fecha del viaje')
+
+    cliente = models.ForeignKey(
+        Cliente, on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Cliente'
+    )
 
     nombre = models.CharField(max_length=100)
     email = models.EmailField()

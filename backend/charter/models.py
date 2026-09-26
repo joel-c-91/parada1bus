@@ -1,6 +1,7 @@
 from django.db import models
 from flota.models import Vehiculo
 from servicios.models import Servicio
+from usuarios.models import Cliente
 
 
 class SolicitudCharter(models.Model):
@@ -15,6 +16,11 @@ class SolicitudCharter(models.Model):
     nombre = models.CharField(max_length=100)
     email = models.EmailField()
     telefono = models.CharField('Teléfono', max_length=50)
+
+    cliente = models.ForeignKey(
+        Cliente, on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Cliente'
+    )
 
     origen = models.CharField('Origen', max_length=200)
     destino = models.CharField('Destino', max_length=200)
