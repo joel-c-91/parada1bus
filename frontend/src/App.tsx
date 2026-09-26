@@ -15,6 +15,11 @@ import FleetPage from './pages/admin/FleetPage';
 import ServicesPage from './pages/admin/ServicesPage';
 import RoutesPage from './pages/admin/RoutesPage';
 import DeparturesPage from './pages/admin/DeparturesPage';
+import ClientesPage from './pages/admin/ClientesPage';
+import PagosPage from './pages/admin/PagosPage';
+import GastosPage from './pages/admin/GastosPage';
+import CategoriasGastoPage from './pages/admin/CategoriasGastoPage';
+import ChequesPage from './pages/admin/ChequesPage';
 
 export default function App() {
   return (
@@ -41,6 +46,11 @@ export default function App() {
             <Route path="/admin/servicios" element={<ServicesPage />} />
             <Route path="/admin/rutas" element={<RoutesPage />} />
             <Route path="/admin/salidas" element={<DeparturesPage />} />
+            <Route path="/admin/clientes" element={<ClientesPage />} />
+            <Route path="/admin/pagos" element={<PagosPage />} />
+            <Route path="/admin/gastos" element={<GastosPage />} />
+            <Route path="/admin/categorias-gasto" element={<CategoriasGastoPage />} />
+            <Route path="/admin/cheques" element={<ChequesPage />} />
           </Route>
         </Route>
       </Routes>

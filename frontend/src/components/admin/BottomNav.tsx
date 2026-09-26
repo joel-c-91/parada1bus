@@ -6,6 +6,11 @@ import {
   ClipboardList,
   Map,
   CalendarClock,
+  Users,
+  DollarSign,
+  CreditCard,
+  Tags,
+  Receipt,
   MoreHorizontal,
   LogOut,
   X,
@@ -21,8 +26,11 @@ const mainTabs = [
 ] as const;
 
 const moreItems = [
-  { path: '/admin/usuarios', label: 'Usuarios', disabled: true },
-  { path: '/admin/finanzas', label: 'Finanzas', disabled: true },
+  { path: '/admin/clientes', label: 'Clientes', icon: Users, disabled: false },
+  { path: '/admin/pagos', label: 'Pagos', icon: DollarSign, disabled: false },
+  { path: '/admin/gastos', label: 'Gastos', icon: CreditCard, disabled: false },
+  { path: '/admin/categorias-gasto', label: 'Categorías', icon: Tags, disabled: false },
+  { path: '/admin/cheques', label: 'Cheques', icon: Receipt, disabled: false },
   { path: '/admin/promociones', label: 'Promociones', disabled: true },
   { path: '/admin/configuracion', label: 'Configuración', disabled: true },
 ] as const;
@@ -103,17 +111,33 @@ export default function BottomNav() {
             </div>
 
             <div className="space-y-1">
-              {moreItems.map((item) => (
-                <button
-                  key={item.path}
-                  disabled={item.disabled}
-                  className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-gray-500 bg-gray-50 cursor-not-allowed min-h-[44px]"
-                  title="Próximamente"
-                >
-                  {item.label}
-                  <span className="text-xs text-gray-400 ml-2">(Próximamente)</span>
-                </button>
-              ))}
+              {moreItems.map((item) => {
+                if (item.disabled) {
+                  return (
+                    <button
+                      key={item.path}
+                      disabled
+                      className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-gray-500 bg-gray-50 cursor-not-allowed min-h-[44px]"
+                      title="Próximamente"
+                    >
+                      {item.label}
+                      <span className="text-xs text-gray-400 ml-2">(Próximamente)</span>
+                    </button>
+                  );
+                }
+                const Icon = 'icon' in item ? item.icon : undefined;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setDrawerOpen(false)}
+                    className="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+                  >
+                    {Icon && <Icon className="w-5 h-5 text-gray-400" />}
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
 
             <hr className="my-4 border-gray-100" />

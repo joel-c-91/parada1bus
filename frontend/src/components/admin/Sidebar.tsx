@@ -6,6 +6,11 @@ import {
   ClipboardList,
   Map,
   CalendarClock,
+  Users,
+  DollarSign,
+  CreditCard,
+  Tags,
+  Receipt,
   LogOut,
   PanelLeftClose,
   PanelLeft,
@@ -19,6 +24,11 @@ const navItems = [
   { path: '/admin/servicios', label: 'Servicios', icon: ClipboardList },
   { path: '/admin/rutas', label: 'Rutas', icon: Map },
   { path: '/admin/salidas', label: 'Salidas', icon: CalendarClock },
+  { path: '/admin/clientes', label: 'Clientes', icon: Users },
+  { path: '/admin/pagos', label: 'Pagos', icon: DollarSign },
+  { path: '/admin/gastos', label: 'Gastos', icon: CreditCard },
+  { path: '/admin/categorias-gasto', label: 'Categorías', icon: Tags },
+  { path: '/admin/cheques', label: 'Cheques', icon: Receipt },
 ] as const;
 
 export default function Sidebar() {
