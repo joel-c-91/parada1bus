@@ -6,47 +6,54 @@ Sistema de gestión de viajes especiales y reservas para **Parada 1 Bus**, empre
 
 | Capa | Tecnología |
 |------|-----------|
-| Frontend | React + TypeScript + Vite + Tailwind CSS |
-| Backend | Django 5 + Django REST Framework |
-| Base de datos | SQLite (desarrollo) / PostgreSQL (producción) |
+| Frontend | React 19 + TypeScript + Vite 8 + Tailwind CSS v4 |
+| Backend | Django 5.2 + Django REST Framework 3.16 + SimpleJWT |
+| Base de datos | SQLite (desarrollo rápido) / PostgreSQL 16 (Docker y producción) |
+| Autenticación | JWT con refresh automático |
 | Mapas | Leaflet + OpenStreetMap |
 | Íconos | Lucide React |
 
-## Estructura del proyecto
+## Inicio rápido con Docker (recomendado)
 
-```
-parada1bus/
-├── backend/                    # Django REST API
-│   ├── config/                 # Configuración del proyecto
-│   │   ├── settings.py         # Settings (dev/prod)
-│   │   ├── urls.py             # Rutas principales
-│   │   └── api.py              # Router de la API
-│   ├── flota/                  # Gestión de vehículos
-│   ├── servicios/              # Tipos de servicio
-│   ├── charter/                # Solicitudes de viaje a medida
-│   ├── rutas/                  # Rutas fijas y horarios
-│   ├── reservas/               # Reservas de pasajes
-│   └── contacto/               # Mensajes de contacto
-├── frontend/                   # React SPA
-│   └── src/
-│       ├── components/         # Componentes reutilizables
-│       │   ├── layout/         # Navbar, Footer, Layout
-│       │   └── ui/             # Componentes de UI
-│       ├── pages/              # Páginas de la aplicación
-│       ├── lib/                # Utilidades (API client, etc.)
-│       └── types/              # Tipos TypeScript
-├── docker-compose.yml          # PostgreSQL para producción
-└── .gitignore
+Un solo comando levanta PostgreSQL + Django + Vite. Es la vía recomendada
+porque evita tener que mantener dos venvs distintas.
+
+> En esta máquina el plugin `docker compose` v2 **no está instalado**. Usar el
+> binario con guion: `docker-compose up -d`.
+
+```bash
+cp .env.example .env      # solo la primera vez
+docker-compose up -d
 ```
 
-## Requisitos
+| Servicio | URL |
+|----------|-----|
+| Sitio público | http://localhost:5173 |
+| Panel de administración | http://localhost:5173/admin/login |
+| API Django | http://localhost:8000/api/ |
+| Admin de Django | http://localhost:8000/admin/ |
 
-- Python 3.12+
-- Node.js 22+
-- npm 10+
-- Docker (opcional, solo para PostgreSQL en producción)
+La primera vez tarda un poco más: construye las imágenes y aplica las
+migraciones automáticamente. Para ver qué está pasando:
 
-## Instalación y ejecución local
+```bash
+docker-compose logs -f backend
+```
+
+### Comandos habituales
+
+```bash
+docker-compose up -d          # levantar
+docker-compose stop           # parar (CONSERVA la base de datos)
+docker-compose down           # parar y eliminar containers (conserva el volumen)
+docker-compose down -v        # DESTRUCTIVO: también borra la base de datos
+docker-compose logs -f        # ver logs de todos los servicios
+docker-compose exec backend python manage.py createsuperuser
+```
+
+## Desarrollo sin Docker
+
+Útil para iterar rápido en el backend con SQLite, sin levantar containers.
 
 ### 1. Backend
 
@@ -56,10 +63,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
+python manage.py createsuperuser   # creá tu usuario admin
 python manage.py runserver
 ```
 
-El servidor corre en `http://localhost:8000`.
+Corre en `http://localhost:8000`. Sin variables `DB_*` definidas usa SQLite.
+
+> Ojo: existen dos venvs (`backend/.venv` y `backend/venv`). La válida es
+> **`.venv`**. `venv/` es una copia vieja.
 
 ### 2. Frontend
 
@@ -69,74 +80,127 @@ npm install
 npm run dev
 ```
 
-El servidor corre en `http://localhost:5173`.
+Corre en `http://localhost:5173` y hace proxy de `/api` hacia
+`http://localhost:8000`.
 
-### 3. Panel de administración
+### Verificaciones de calidad
 
-Acceder a `http://localhost:8000/admin`
+```bash
+cd frontend
+npx tsc --noEmit     # typecheck estricto
+npm run build        # compila para producción
+cd ../backend
+python manage.py check
+python manage.py makemigrations --check --dry-run
+```
 
-**Usuario por defecto:** `admin` — **Contraseña:** `admin123`
+## Estructura del proyecto
 
-> **Importante:** Cambiar estas credenciales en producción.
+```
+parada1bus/
+├── backend/                    # Django REST API
+│   ├── config/                 # settings.py, urls.py, api.py
+│   ├── flota/                  # Vehículos
+│   ├── servicios/              # Tipos de servicio
+│   ├── charter/                # Solicitudes de viaje a medida
+│   ├── rutas/                  # Rutas fijas, horarios y salidas
+│   ├── reservas/               # Reservas de pasajes
+│   ├── usuarios/               # Clientes
+│   ├── finanzas/               # Pagos, gastos, categorías y cheques
+│   ├── promociones/           # Promociones
+│   ├── configuracion/          # Parámetros del sitio
+│   ├── contacto/               # Mensajes de contacto
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/                   # React SPA
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── admin/          # Layout y componentes del panel
+│   │   │   ├── layout/         # Navbar, Footer
+│   │   │   └── ui/             # Componentes reutilizables
+│   │   ├── pages/
+│   │   │   └── admin/          # Páginas CRUD del panel
+│   │   ├── contexts/           # AuthContext
+│   │   ├── lib/                # Cliente de API, React Query
+│   │   └── types/              # Tipos TypeScript
+│   ├── Dockerfile
+│   └── vite.config.ts
+├── openspec/                   # Artefactos de Spec-Driven Development
+├── docker-compose.yml          # PostgreSQL + Django + Vite
+└── .env.example
+```
 
 ## API REST
 
-La API está disponible en `http://localhost:8000/api/`:
+Pública, en `http://localhost:8000/api/`:
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/api/vehiculos/` | Lista de la flota |
 | GET | `/api/servicios/` | Servicios disponibles |
-| GET/POST | `/api/solicitudes-charter/` | Solicitudes de viaje a medida |
+| GET | `/api/solicitudes-charter/` | Solicitudes de viaje a medida |
 | GET | `/api/rutas/` | Rutas fijas con horarios y precios |
 | GET | `/api/rutas/buscar/?origen=X&destino=Y` | Buscar rutas entre dos ciudades |
 | GET | `/api/rutas/{id}/` | Detalle de ruta con salidas |
 | GET/POST | `/api/reservas/` | Reservas de pasajes |
 | POST | `/api/contacto/` | Enviar mensaje de contacto |
 
-## Variables de configuración importantes
+Panel de administración (requiere token JWT), en `/api/admin/`:
 
-### WhatsApp
-Reemplazar `5493584000000` por el número real de la empresa en:
-- `frontend/src/components/layout/Navbar.tsx`
-- `frontend/src/components/layout/Footer.tsx`
-- `frontend/src/pages/Contacto.tsx`
+| Endpoint | Descripción |
+|----------|-------------|
+| `vehiculos`, `servicios`, `rutas`, `salidas` | CRUD con paginación (25 por página) |
+| `clientes` | CRUD de clientes |
+| `pagos`, `gastos`, `categorias-gasto` | Control financiero |
+| `cheques` | Cheques con estados: en cartera, depositado, rechazado, entregado |
 
-### Email
-Reemplazar `info@parada1bus.com` por el email real en:
-- `frontend/src/components/layout/Footer.tsx`
-- `frontend/src/pages/Contacto.tsx`
+Autenticación: `POST /api/auth/token/` con `{ "username": ..., "password": ... }`
+y `POST /api/auth/token/refresh/` para renovar. Ojo: **username**, no email.
 
-## Despliegue a producción
+## Configuración
 
-### Base de datos PostgreSQL
+Todo se lee de variables de entorno. Ver `.env.example` para la lista completa
+con comentarios.
 
-Para usar PostgreSQL en lugar de SQLite:
+| Variable | Para qué |
+|----------|----------|
+| `DJANGO_SECRET_KEY` | **Obligatoria en producción.** Generar una por proyecto |
+| `DJANGO_DEBUG` | `False` en producción |
+| `DJANGO_ALLOWED_HOSTS` | Dominios permitidos, separados por comas |
+| `DB_ENGINE` | `postgresql` para usar Postgres; si no está, usa SQLite |
+| `DB_HOST` | Dentro de Docker Compose debe ser `db`, **no** `localhost` |
+| `VITE_PROXY_TARGET` | Solo con Docker: `http://backend:8000` |
 
-1. Descomentar la configuración de PostgreSQL en `backend/config/settings.py`
-2. Levantar PostgreSQL con Docker:
+### Seguridad — importante antes de producción
 
-```bash
-docker-compose up -d
-```
+- **No** subas el archivo `.env` al repositorio (ya está en `.gitignore`).
+- Generá una `DJANGO_SECRET_KEY` nueva. La que estaba hardcodeada en
+  `settings.py` quedó expuesta en el historial de git y no debe reutilizarse.
+- `DJANGO_DEBUG` en `False` y `ALLOWED_HOSTS` acotado a los dominios reales.
+- Cambiá la contraseña de PostgreSQL: el valor por defecto de `docker-compose.yml`
+  es solo para desarrollo.
 
-### Frontend (Vercel — plan free)
+## Datos de contacto para actualizar antes de publicar
 
-```bash
-cd frontend
-npm run build
-```
+- **WhatsApp** — reemplazar `5493584000000` en:
+  - `frontend/src/components/layout/Navbar.tsx`
+  - `frontend/src/components/layout/Footer.tsx`
+  - `frontend/src/pages/Contacto.tsx`
+- **Email** — reemplazar `info@parada1bus.com` en:
+  - `frontend/src/components/layout/Footer.tsx`
+  - `frontend/src/pages/Contacto.tsx`
 
-Conectar el repositorio a [Vercel](https://vercel.com) y configurar:
-- Framework: Vite
-- Directorio: `frontend/`
+## Deuda técnica conocida
 
-### Backend (Railway o Render — plan free)
+Cosas que funcionan pero conviene arreglar:
 
-Conectar el repositorio y configurar:
-- Comando: `cd backend && gunicorn config.wsgi`
-- Puerto: `8000`
+- `AdminPagination` está **duplicado** en `flota/views.py`, `rutas/views.py` y
+  `servicios/views.py`. Debería vivir en un módulo compartido.
+- El bundle de frontend pesa ~600 kB sin code-splitting. Vite advierte chunks
+  mayores a 500 kB. Con `React.lazy` se puede partir por ruta.
+- No hay tests automatizados. Antes de tocar la lógica de negocio conviene
+  agregar al menos tests de los modelos de `finanzas` y de los serializers.
 
 ---
 
-Desarrollado con ❤️ para Parada 1 Bus.
+Desarrollado para Parada 1 Bus.
