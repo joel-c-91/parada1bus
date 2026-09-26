@@ -8,6 +8,7 @@ interface Servicio {
   nombre: string;
   descripcion_corta: string;
   descripcion_larga: string;
+  imagen?: string;
 }
 
 export default function Servicios() {
@@ -41,9 +42,25 @@ export default function Servicios() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {servicios.map((s) => (
-            <div key={s.id} className="bg-gray-50 rounded-2xl p-8 hover:shadow-md transition-shadow">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">{s.nombre}</h2>
-              <p className="text-gray-600 mb-4">{s.descripcion_larga || s.descripcion_corta}</p>
+            <div key={s.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-40 md:h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden">
+                {s.imagen ? (
+                  <img
+                    src={s.imagen}
+                    alt={s.nombre}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 mx-auto mb-2" />
+                    <span className="text-xs text-gray-400">Foto próximamente</span>
+                  </div>
+                )}
+              </div>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">{s.nombre}</h2>
+                <p className="text-gray-600">{s.descripcion_larga || s.descripcion_corta}</p>
+              </div>
             </div>
           ))}
         </div>

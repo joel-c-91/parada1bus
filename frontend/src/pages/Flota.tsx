@@ -9,6 +9,7 @@ interface Vehiculo {
   tipo_display: string;
   capacidad: number;
   descripcion: string;
+  imagen?: string;
 }
 
 export default function Flota() {
@@ -49,11 +50,19 @@ export default function Flota() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vehiculos.map((v) => (
             <div key={v.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-40 md:h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-                <div className="text-center">
-                  <Users className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                  <span className="text-xs text-gray-400">Foto próximamente</span>
-                </div>
+              <div className="h-40 md:h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden">
+                {v.imagen ? (
+                  <img
+                    src={v.imagen}
+                    alt={v.nombre}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <Users className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                    <span className="text-xs text-gray-400">Foto próximamente</span>
+                  </div>
+                )}
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
