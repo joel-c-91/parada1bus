@@ -55,7 +55,7 @@ function StatCard({
 
 export default function DashboardPage() {
   const vehiculosQuery = useQuery({
-    queryKey: ['vehiculos'],
+    queryKey: ['dashboard-vehiculos'],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<Vehiculo>>('/admin/vehiculos/');
       return res.data.count;
@@ -63,7 +63,7 @@ export default function DashboardPage() {
   });
 
   const serviciosQuery = useQuery({
-    queryKey: ['servicios'],
+    queryKey: ['dashboard-servicios'],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<Servicio>>('/admin/servicios/');
       return res.data.count;
@@ -71,7 +71,7 @@ export default function DashboardPage() {
   });
 
   const rutasQuery = useQuery({
-    queryKey: ['rutas'],
+    queryKey: ['dashboard-rutas'],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<Ruta>>('/admin/rutas/');
       return res.data.count;
@@ -79,7 +79,7 @@ export default function DashboardPage() {
   });
 
   const salidasQuery = useQuery({
-    queryKey: ['salidas'],
+    queryKey: ['dashboard-salidas'],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<Salida>>('/admin/salidas/');
       return res.data.count;
