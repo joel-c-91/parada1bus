@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const response = await api.post('/auth/token/', { email, password });
+    const response = await api.post('/auth/token/', { username: email, password });
     const { access, refresh } = response.data;
     localStorage.setItem('parada1bus_access_token', access);
     localStorage.setItem('parada1bus_refresh_token', refresh);
