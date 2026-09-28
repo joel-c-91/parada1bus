@@ -1,5 +1,10 @@
 import { ArrowRight, Bus, Calendar, MapPin, Shield, Users, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useContenidoSitio } from '../hooks/useContenidoSitio';
+
+// Foto de respaldo si el admin todavia no subio ninguna para el hero.
+const HERO_POR_DEFECTO =
+  "url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069')";
 
 const servicios = [
   {
@@ -52,11 +57,32 @@ const rutasPopulares = [
 ];
 
 export default function Inicio() {
+  const contenido = useContenidoSitio();
+
+  const hero = contenido.home_hero;
+  const rutas = contenido.home_rutas;
+  const cta = contenido.home_cta;
+
   return (
     <>
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-francia via-francia-claro to-francia text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069')] bg-cover bg-center opacity-15" />
+        {hero ? (
+          <>
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-cover bg-center opacity-15"
+              style={{ backgroundImage: `url('${hero.imagen}')` }}
+            />
+            {hero.alt && <span className="sr-only">{hero.alt}</span>}
+          </>
+        ) : (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-cover bg-center opacity-15"
+            style={{ backgroundImage: HERO_POR_DEFECTO }}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-francia/50 to-francia" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-36">
@@ -170,13 +196,31 @@ export default function Inicio() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-            <div className="bg-gradient-to-br from-rojo-claro to-red-100 rounded-3xl p-8 md:p-12">
-              <div className="text-center">
-                <div className="text-5xl mb-4">🚍</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Salidas diarias</h3>
-                <p className="text-gray-600">Consultá horarios y reservá tu pasaje al instante.</p>
+            {rutas ? (
+              <div
+                className="bg-cover bg-center rounded-3xl min-h-[280px] md:min-h-[360px] shadow-sm"
+                style={{ backgroundImage: `linear-gradient(to top, rgba(17,24,39,.75), rgba(17,24,39,.15)), url('${rutas.imagen}')` }}
+              >
+                <div className="min-h-[280px] md:min-h-[360px] rounded-3xl p-8 md:p-12 flex items-end">
+                  <div>
+                    {/* La foto es decorativa: el texto de abajo manda. El alt va
+                      aparte para que lectores de pantalla y buscadores la
+                      lean, en vez de reemplazar el contenido. */}
+                    {rutas.alt && <span className="sr-only">{rutas.alt}</span>}
+                    <h3 className="text-2xl font-bold text-white mb-2">Salidas diarias</h3>
+                    <p className="text-white/90">Consultá horarios y reservá tu pasaje al instante.</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-gradient-to-br from-rojo-claro to-red-100 rounded-3xl p-8 md:p-12">
+                <div className="text-center">
+                  <div className="text-5xl mb-4">🚍</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Salidas diarias</h3>
+                  <p className="text-gray-600">Consultá horarios y reservá tu pasaje al instante.</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -217,8 +261,16 @@ export default function Inicio() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-rojo to-red-700">
+      <section
+        className={
+          cta
+            ? 'relative py-16 md:py-20 bg-cover bg-center'
+            : 'py-16 md:py-20 bg-gradient-to-r from-rojo to-red-700'
+        }
+        style={cta ? { backgroundImage: `linear-gradient(to right, rgba(185,28,28,.88), rgba(153,27,27,.75)), url('${cta.imagen}')` } : undefined}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {cta?.alt && <span className="sr-only">{cta.alt}</span>}
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             ¿Listo para tu próximo viaje?
           </h2>
