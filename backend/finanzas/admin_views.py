@@ -1,10 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from rest_framework import filters as drf_filters
 
+from config.pagination import AdminPagination
 from .models import CategoriaGasto, Pago, Gasto, Cheque
 from .serializers import (
     CategoriaGastoSerializer,
@@ -12,12 +12,6 @@ from .serializers import (
     GastoSerializer,
     ChequeSerializer,
 )
-
-
-class AdminPagination(PageNumberPagination):
-    page_size = 25
-    page_size_query_param = 'page_size'
-    max_page_size = 100
 
 
 class CategoriaGastoViewSet(viewsets.ModelViewSet):
