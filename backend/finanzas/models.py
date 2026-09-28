@@ -1,6 +1,17 @@
+from datetime import date, timedelta
+from decimal import Decimal
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+
+# El limite minimo va como Decimal y NO como float a proposito.
+#
+# MinValueValidator(0.01) con float hace que el propio minimo declarado sea
+# rechazado: en Python Decimal('0.01') < 0.01 da True, porque el float 0.01
+# vale en realidad 0.01000000000000000020816... y la comparacion Decimal vs
+# float es exacta. Con Decimal el limite, la comparacion es coherente.
+MONTO_MINIMO = Decimal('0.01')
 
 
 class CategoriaGasto(models.Model):
@@ -31,7 +42,7 @@ class Pago(models.Model):
     )
     monto = models.DecimalField(
         'Monto', max_digits=10, decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(MONTO_MINIMO)]
     )
     fecha = models.DateField('Fecha')
     descripcion = models.TextField('Descripción', blank=True)
@@ -56,7 +67,7 @@ class Gasto(models.Model):
     )
     monto = models.DecimalField(
         'Monto', max_digits=10, decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(MONTO_MINIMO)]
     )
     fecha = models.DateField('Fecha')
     descripcion = models.TextField('Descripción', blank=True)
@@ -99,7 +110,7 @@ class Cheque(models.Model):
     banco = models.CharField('Banco', max_length=100)
     monto = models.DecimalField(
         'Monto', max_digits=10, decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(MONTO_MINIMO)]
     )
     fecha_emision = models.DateField('Fecha de emisión')
     fecha_vto = models.DateField('Fecha de vencimiento', null=True, blank=True)
