@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from datetime import datetime, date
 
 from config.pagination import AdminPagination
+from config.permissions import PublicReadOnlyOrAuthenticated
 from .models import Ruta, Salida
 from .serializers import RutaSerializer, AdminRutaSerializer, AdminSalidaSerializer
 
@@ -12,6 +13,7 @@ from .serializers import RutaSerializer, AdminRutaSerializer, AdminSalidaSeriali
 class RutaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ruta.objects.filter(activo=True)
     serializer_class = RutaSerializer
+    permission_classes = [PublicReadOnlyOrAuthenticated]
 
     @action(detail=False, methods=['get'])
     def buscar(self, request):

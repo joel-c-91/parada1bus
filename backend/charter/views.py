@@ -1,13 +1,21 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from config.permissions import PublicCreateOrAuthenticated
 from .models import SolicitudCharter
 from .serializers import SolicitudCharterSerializer
 
 
 class SolicitudCharterViewSet(viewsets.ModelViewSet):
+    """
+    Publico: solo POST (formulario de cotizacion del sitio).
+    Requiere autenticacion: listar, ver, cotizar, modificar y eliminar solicitudes.
+    """
+
     queryset = SolicitudCharter.objects.all()
     serializer_class = SolicitudCharterSerializer
+    permission_classes = [PublicCreateOrAuthenticated]
 
     def get_queryset(self):
         qs = super().get_queryset()
