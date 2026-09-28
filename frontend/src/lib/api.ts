@@ -99,4 +99,28 @@ function clearTokensAndRedirect() {
   }
 }
 
+/**
+ * Traduce una respuesta de error de DRF a un mensaje legible.
+ *
+ * DRF devuelve los errores por campo, y los errores de negocio (por ejemplo
+ * "no quedan asientos") en `non_field_errors`. Un `catch` genérico esconde
+ * justo la informacion que el usuario necesita para corregir el formulario.
+ */
+export function extraerMensajeError(error: unknown, porDefecto: string): string {
+  const respuesta = (error as { response?: { data?: Record<string, unknown> } })?.response;
+  const datos = respuesta?.data;
+
+  if (!datos || typeof datos !== 'object') return porDefecto;
+  if (typeof datos.detail === 'string') return datos.detail;
+
+  const mensajes = Object.entries(datos).flatMap(([campo, valor]) => {
+    const lista = Array.isArray(valor) ? valor : [valor];
+    return lista.map((mensaje) =>
+      campo === 'non_field_errors' ? String(mensaje) : `${campo}: ${String(mensaje)}`,
+    );
+  });
+
+  return mensajes.length > 0 ? mensajes.join(' ') : porDefecto;
+}
+
 export default api;
