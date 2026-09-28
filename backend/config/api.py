@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 from flota.views import VehiculoViewSet
 from servicios.views import ServicioViewSet
 from charter.views import SolicitudCharterViewSet
-from rutas.views import RutaViewSet
+from rutas.views import RutaViewSet, SalidaViewSet
 from reservas.views import ReservaViewSet
 from contacto.views import MensajeContactoViewSet
 
@@ -11,6 +11,7 @@ router.register('vehiculos', VehiculoViewSet)
 router.register('servicios', ServicioViewSet)
 router.register('solicitudes-charter', SolicitudCharterViewSet)
 router.register('rutas', RutaViewSet)
+router.register('salidas', SalidaViewSet)
 router.register('reservas', ReservaViewSet)
 router.register('contacto', MensajeContactoViewSet)
 

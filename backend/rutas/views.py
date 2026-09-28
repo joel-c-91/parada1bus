@@ -1,3 +1,4 @@
+from django.db import models
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,33 @@ from datetime import datetime, date
 from config.pagination import AdminPagination
 from config.permissions import PublicReadOnlyOrAuthenticated
 from .models import Ruta, Salida
-from .serializers import RutaSerializer, AdminRutaSerializer, AdminSalidaSerializer
+from .serializers import (RutaSerializer, SalidaPublicSerializer,
+                          AdminRutaSerializer, AdminSalidaSerializer)
+
+
+class SalidaViewSet(viewsets.ReadOnlyModelViewSet):
+    """Salidas reservables del sitio publico.
+
+    Es lo que el sitio necesita para mostrar viajes con precio y
+    disponibilidad real. Sin esto, la pagina de reserva no tiene de donde
+    sacar el viaje que el usuario eligio.
+    """
+
+    queryset = Salida.objects.filter(activo=True, ruta__activo=True).select_related(
+        'ruta', 'vehiculo'
+    )
+    permission_classes = [PublicReadOnlyOrAuthenticated]
+    serializer_class = SalidaPublicSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        origen = self.request.query_params.get('origen', '').strip()
+        destino = self.request.query_params.get('destino', '').strip()
+        if origen:
+            qs = qs.filter(ruta__origen__icontains=origen)
+        if destino:
+            qs = qs.filter(ruta__destino__icontains=destino)
+        return qs
 
 
 class RutaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -15,50 +42,56 @@ class RutaViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RutaSerializer
     permission_classes = [PublicReadOnlyOrAuthenticated]
 
+    def get_queryset_salidas(self):
+        return Salida.objects.filter(activo=True, ruta__activo=True).select_related(
+            'ruta', 'vehiculo'
+        )
+
     @action(detail=False, methods=['get'])
     def buscar(self, request):
-        origen = request.query_params.get('origen', '').strip().lower()
-        destino = request.query_params.get('destino', '').strip().lower()
-        fecha_str = request.query_params.get('fecha', '')
+        """Devuelve viajes reservables, no rutas.
+
+        El sitio lista horarios y precios y lleva a reservar una salida
+        concreta, asi que el resultado tiene que ser una Salida.
+        """
+        origen = request.query_params.get('origen', '').strip()
+        destino = request.query_params.get('destino', '').strip()
 
         if not origen or not destino:
             return Response(
-                {'error': 'Debe ingresar origen y destino'},
+                {'error': 'Debe ingresar origen y destino', 'resultados': []},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        rutas = self.get_queryset().filter(
-            origen__icontains=origen,
-            destino__icontains=destino,
+        salidas = self.get_queryset_salidas().filter(
+            ruta__origen__icontains=origen,
+            ruta__destino__icontains=destino,
         )
 
-        if not rutas:
+        if not salidas:
             # Buscar inversa (origen <-> destino intercambiados)
-            rutas = self.get_queryset().filter(
-                origen__icontains=destino,
-                destino__icontains=origen,
+            salidas = self.get_queryset_salidas().filter(
+                ruta__origen__icontains=destino,
+                ruta__destino__icontains=origen,
             )
 
-        if not rutas:
-            return Response({'resultados': [], 'mensaje': 'No se encontraron rutas para esa búsqueda'})
-
-        serializer = self.get_serializer(rutas, many=True)
-        return Response({'resultados': serializer.data})
+        return Response({
+            'resultados': SalidaPublicSerializer(salidas, many=True).data,
+        })
 
     @action(detail=False, methods=['get'])
     def buscar_todo(self, request):
-        """Busca rutas donde origen O destino contengan el texto"""
-        q = request.query_params.get('q', '').strip().lower()
+        """Busca viajes donde origen O destino contengan el texto."""
+        q = request.query_params.get('q', '').strip()
         if not q:
-            return Response({'error': 'Ingrese un término de búsqueda'}, status=400)
-        rutas = self.get_queryset().filter(
-            origen__icontains=q
-        ) | self.get_queryset().filter(
-            destino__icontains=q
-        )
-        rutas = rutas.distinct()
-        serializer = self.get_serializer(rutas, many=True)
-        return Response(serializer.data)
+            return Response({'error': 'Ingrese un término de búsqueda', 'resultados': []},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        salidas = self.get_queryset_salidas().filter(
+            models.Q(ruta__origen__icontains=q) | models.Q(ruta__destino__icontains=q)
+        ).distinct()
+
+        return Response({'resultados': SalidaPublicSerializer(salidas, many=True).data})
 
 
 class AdminRutaViewSet(viewsets.ModelViewSet):
